@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        li{
+            list-style: none;
+        }
+        #container{
+            height: 300px;
+            width: 400px;
+            margin: 100px auto;
+        }
+        #container ul{
+            overflow: hidden;
+        }
+        #container ul li{
+            float: left;
+            width: 120px;
+            height: 30px;
+            margin-right: 5px;
+            text-align: center;
+            background-color: #cccccc;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
+        #content{
+            width: 100%;
+            height: 100%;
+            background-color:#eee;
+            border-top: 1px solid #000;
+        }
+        #content ul {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+<div id="container">
+    <ul>
+        <li class="select">111</li>
+        <li class="select">222</li>
+        <li class="select">333</li>
+    </ul>
+    <div id="content">
+            <ul>
+                <li class="contenter">aaa</li>
+                <li class="contenter">bbb</li>
+                <li class="contenter">ccc</li>
+            </ul>
+
+        </div>
+</div>
+<script>
+    var oContainer = document.getElementById("container");
+    var ali = document.getElementsByTagName("li");
+    var oContent = document.getElementById("content");
+    var oContenter = oContent.getElementsTagName("li");
+
+    oContent.innerHTML = oContenter[0];
+
+    for(var i= 0; i<ali.length; i++){
+        ali.index = i;// ???
+        ali[i].onclick = function(){
+            console.log(111);
+            for (var j=0; j<ali.length; j++ ){
+
+                ali[j].className = '';
+            }
+            this.ali[j].className="select";          //为什么是j
+            this.style.background = "grey";
+        }
+
+        for(var k = 0; k<oContenter.length; k++){
+            oContent.innerHTML = oContenter[k];
+            console.log(oContent[k]);
+            oContent.style.display = "block";
+        }
+    }
+</script>
+</body>
+</html>

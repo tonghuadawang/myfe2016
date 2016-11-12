@@ -17,12 +17,12 @@
         border: 1px solid #000000;
         margin: 50px auto;
         position: relative; /*什么时候用relative什么时候用absolute*/
+        overflow: hidden;
     }
     #content{
         overflow: hidden;
         width: 520px;
         position: absolute;
-        overflow: hidden;
 
     }
     #content li{
@@ -76,7 +76,7 @@
     oContent.style.width = aLi.length *(aLi[0].offsetWidth + 10) +"px";
     var speed = -2;
     setInterval(function(){
-        if(oContent.offsetLeft <= -oContent.offsetWidth/2 +"px"){
+        if(oContent.offsetLeft <= -oContent.offsetWidth/2){
             oContent.style.left = 0;
         }
         if(oContent.offsetLeft > 0){

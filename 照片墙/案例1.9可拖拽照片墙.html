@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #container{
+            width: 660px ;
+            margin: 0 auto;
+        }
+        #container img{
+            width: 200px;
+            height: 150px;
+            margin: 10px;
+            float: left;
+        }
+        #container img.collide{
+            border: 1px dotted #f00;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="container">
+        <img src="images/2.jpg" alt=""/>
+        <img src="images/3.jpg" alt=""/>
+        <img src="images/4.jpg" alt=""/>
+        <img src="images/5.jpg" alt=""/>
+        <img src="images/6.jpg" alt=""/>
+        <img src="images/7.jpg" alt=""/>
+        <img src="images/8.jpg" alt=""/>
+        <img src="images/9.jpg" alt=""/>
+        <img src="images/1.jpg" alt=""/>
+    </div>
+    <script src="jslib.js">
+        </script>
+    <script>
+        // 1.布局转换 float--定位
+        // 2.绑定拖拽
+        // 3.检测碰撞，所有碰撞元素放入数组collide中
+        // 4.找出距离最近的
+        // 5.交换位置
+        var oContainer = document.getElementById('container');
+        var aImg = oContainer.getElementsByTagName('img');
+        var zIndex = 1;
+        var collide=[];
+        var nearElem = null;
+
+        for(var i= 0;i<aImg.length;i++){
+
+//            aImg[i].style.position = 'absolute'; 避免定位后空间释放，只能取到相同位置，不能在此处定位
+            aImg[i].style.left = aImg[i].offsetLeft + "px";//未定位依然可以获取位置
+            aImg[i].style.top = aImg[i].offsetTop + "px";
+        }
+
+        for(var i= 0;i<aImg.length;i++){
+
+        aImg[i].style.position = 'absolute'; //重新循环定位，位置已取完
+        aImg[i].style.margin = 0; //定位后margin多余
+        drag(aImg[i]);
+
+            aImg[i].pos={
+                left:aImg[i].offsetLeft,
+                top:aImg[i].offsetTop
+            }
+        }
+
+        function drag(elem){   //拖拽事件
+            elem.onmousedown = function(e){  // 鼠标按下事件
+                e = e || window.event;  //普通浏览器与IE兼容
+                var iDisX = e.clientX - elem.offsetLeft;//获取鼠标到浏览器左侧距离 -元素到浏览器左侧
+                var iDisY = e.clientY - elem.offsetTop;
+
+                document.onmousemove = function(e){// 鼠标移动
+                    e = e || window.event;
+
+                    var iLeft = e.clientX - iDisX;//定义鼠标到浏览器左侧距离 -鼠标到元素左侧距离
+                    var iTop = e.clientY - iDisY;
+
+                    elem.style.left = iLeft +"px";
+                    elem.style.top = iTop +"px";
+                    elem.style.zIndex = zIndex++;//改变层级，令鼠标拖拽在的那层最高
+
+                    //                碰撞检测
+                    collide = [];//刷新上一侧碰撞结果
+                    for(var i=0;i<aImg.length;i++) {//循环检测碰撞
+                        if (aImg[i] == elem) {       //排除自己
+                            continue;//退出本次循环，break退出所有
+                        }
+                        var isCol = checkCode(elem, aImg[i]);//判断iscol是T、判断是否碰上
+                        if (isCol) {
+                            collide.push(aImg[i]);//碰撞把碰撞到的图片存入collide数组??
+                            //push是将元素放入数组，入栈
+                        }
+                        aImg[i].className ='';
+                    }
+
+                    if(collide.length>0){
+                        nearElem = nearest(elem);//函数返回值
+                        nearElem.className = "collide";
+                    }else{
+                        nearElem = null;
+                    }
+
+                     return false;//阻止图片不可拖拽默认行为
+                }
+                document.onmouseup = function(){//鼠标释放，移动事件结束
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+
+                    //elem nearElem 交换位置
+                    if(nearElem){
+                        animate(elem,nearElem.pos)//等于left：nearElem.pos.left
+                        animate(nearElem,elem.pos);
+
+                        var pos = nearElem.pos;
+                        nearElem.pos = elem.pos;
+                        elem.pos = pos;
+                        nearElem.className = '';
+                        nearElem = null;
+                    }else{
+                        animate(elem,elem.pos);
+                    }
+
+                }
+            }
+        }
+        function checkCode(elem,target){  //碰撞检测
+            var elemL = elem.offsetLeft,
+                    elemR = elem.offsetLeft+elem.offsetWidth,
+                    elemT = elem.offsetTop,
+                    elemB = elem.offsetTop+elem.offsetHeight;
+
+            var targetL = target.offsetLeft,
+                    targetR = target.offsetLeft+target.offsetWidth,
+                    targetT = target.offsetTop,
+                    targetB = target.offsetTop+target.offsetHeight;
+
+            if(elemR<targetL || elemB<targetT || elemL>targetR ||elemT>targetB){
+                return false;//没碰撞
+            }else{
+                return true;//发生碰撞
+            }
+        }
+
+        function nearest(elem){  //检测碰撞最小距离元素
+            var minDis = 99999;  //初始化最小距离
+            var index = -1; //记录最小距离元素索引
+
+            for(var i=0;i<collide.length;i++){
+                var x = collide[i].offsetLeft - elem.offsetLeft;
+                var y = collide[i].offsetTop - elem.offsetTop;
+                var dis = Math.sqrt(x*x+y*y);   //勾股定理
+                if(dis<minDis){     //判断置换最小距离
+                    minDis = dis;
+                    index = i;
+                }
+            }
+            return collide[index];
+        }
+
+
+    </script>
+</body>
+</html>

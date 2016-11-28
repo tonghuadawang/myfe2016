@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    //7.波纳契（Fibonacci）数列的第一项是1，第二项是1，以后各项都是前两项的和。
+    // 试用递归函数和非递归函数各编写一个程序，求斐波纳契数列第N项的值。
+    function fibonacci(){
+        if(n==1||n==2){
+            return 1;
+        }
+        return fibonacci(n-1) + fibonacci(n-2);
+    }
+
+    console.log(fibonacci(7));
+
+    //非递归
+    function fibonacci(){
+        if(n==1||n==2){
+            return 1;
+        }
+        var a=1;b=1;c;
+        for(var i=3;i<=n;i++){
+            c=a+b;//2
+            a=b;
+            b=c;
+        }
+        return c;
+    }
+    console.log(fibonacci(7));
+</script>
+</body>
+</html>

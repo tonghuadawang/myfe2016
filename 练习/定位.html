@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        div{
+            width:200px;
+            height:100px;
+            position:absolute;
+            top:10px;
+            left:10px;
+        }
+        #a{
+            background-color:#ff0000;
+            z-index:1;
+        }
+        #b{
+            background-color:#00ff00;
+            z-index:2;
+        }
+        #c{
+            background-color:#0000ff;
+            z-index:3;
+        }
+        #main{
+            width:700px;
+            height:300px;
+            background-color:#cccccc;
+            position:relative;/*此处可以不用*/
+            top:50px;/*相对定位相对自己本身原来的位置：此处往下移动50px*/
+            left:50px;/*absolute相对于父元素定位*/
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div id="a"></div>
+        <div id="b"></div>
+        <div id="c"></div>
+    </div>
+</body>
+</html>
